@@ -1,0 +1,87 @@
+<!-- join.html -->
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jio.film - My Page</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="index.html">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <div class="wrapper">
+            <div class="form-container">
+                <h2>회원가입</h2>
+                <form id="join-form">
+                    <input type="text" id="name" placeholder="이름" required><br>
+                    <input type="email" id="email" placeholder="이메일" required><br>
+                    <button type="button" onclick="sendVerificationCode()">인증 코드 발송</button><br>
+                    <input type="text" id="verify-code" placeholder="인증 코드 입력"><br>
+                    <input type="password" id="password" placeholder="비밀번호" required><br>
+                    <button type="submit">가입하기</button>
+                </form>
+                <p id="join-message"></p>
+            </div>
+        </div>
+
+        <script>
+            let emailCode = "";
+
+            function sendVerificationCode() {
+                emailCode = Math.floor(100000 + Math.random() * 900000).toString();
+                alert("[가상 이메일] 인증 코드: " + emailCode);
+            }
+
+            document.getElementById("join-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const inputCode = document.getElementById("verify-code").value;
+
+                if (inputCode !== emailCode) {
+                    alert("인증 코드가 일치하지 않습니다.");
+                    return;
+                }
+
+                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                if (users.find(u => u.email === email)) {
+                    alert("이미 가입된 이메일입니다.");
+                    return;
+                }
+
+                const role = (email === "admin@jio.com") ? "admin" : "user";
+                users.push({ name, email, password, role });
+                localStorage.setItem("users", JSON.stringify(users));
+                alert("가입 완료! 로그인해주세요.");
+                window.location.href = "login.html";
+            });
+        </script>
+        <script type="text/javascript" src="common.js"></script>
+</body>
+
+</html>
