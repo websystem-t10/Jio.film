@@ -430,7 +430,7 @@ body {
     border-radius: 6px;
 }
 
-#join-form button [type="submit"] {
+#join-form button {
     width: 100%;
     padding: 14px;
     margin-top: 16px;
@@ -443,20 +443,6 @@ body {
 }
 
 #login-form button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 16px;
-    font-size: 1.1rem;
-    background-color: #222;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-
-#join-form button[type="button"] {
-    flex: 1;
     width: 100%;
     padding: 14px;
     margin-top: 16px;
