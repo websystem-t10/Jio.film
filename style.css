@@ -404,3 +404,66 @@ body {
     font-weight: bold;
     color: #999;
 }
+
+
+/* join, login 페이지 */
+.form-container {
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.form-container h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+#join-form input,
+#login-form input {
+    width: 87%;
+    padding: 14px;
+    margin: 8px 0;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#join-form button [type="submit"] {
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 1.1rem;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#login-form button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 1.1rem;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+
+#join-form button[type="button"] {
+    flex: 1;
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 1.1rem;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
