@@ -54,27 +54,27 @@
                 ©2025 Jio.film Corp. All rights reserved.
             </div>
         </footer>
+    </div>
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
 
-        <script>
-            document.getElementById("login-form").addEventListener("submit", function (e) {
-                e.preventDefault();
-                const email = document.getElementById("login-email").value;
-                const password = document.getElementById("login-password").value;
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+            const user = users.find(u => u.email === email && u.password === password);
 
-                const users = JSON.parse(localStorage.getItem("users") || "[]");
-                const user = users.find(u => u.email === email && u.password === password);
+            if (!user) {
+                alert("이메일 또는 비밀번호가 틀렸습니다.");
+                return;
+            }
 
-                if (!user) {
-                    alert("이메일 또는 비밀번호가 틀렸습니다.");
-                    return;
-                }
-
-                sessionStorage.setItem("loginUser", JSON.stringify(user));
-                alert(`${user.name}님 환영합니다! (${user.role === "admin" ? "관리자" : "일반 사용자"})`);
-                location.href = "index.html";
-            });
-        </script>
-        <script type="text/javascript" src="common.js"></script>
+            sessionStorage.setItem("loginUser", JSON.stringify(user));
+            alert(`${user.name}님 환영합니다! (${user.role === "admin" ? "관리자" : "일반 사용자"})`);
+            location.href = "index.html";
+        });
+    </script>
+    <script type="text/javascript" src="common.js"></script>
 </body>
 
 </html>
