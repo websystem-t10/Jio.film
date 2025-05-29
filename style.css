@@ -162,7 +162,7 @@ body {
     display: block;
 }
 
-/* Best 상품 */
+/* index_Best 상품 */
 .best-products {
     padding: 20px;
     text-align: center;
@@ -214,6 +214,143 @@ body {
     white-space: pre-line;
     /* 줄바꿈 유지 */
 }
+
+
+/* shopping */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.sort-bar {
+    margin-bottom: 10px;
+}
+
+select {
+    padding: 5px;
+}
+
+.shopping-categories {
+    margin-bottom: 20px;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product {
+    background: #e7dbc8;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.product img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    background: #aaa;
+}
+
+/* shopping detail */
+/* 상품 상세 페이지 스타일 */
+.shopping-product-detail {
+    padding: 30px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.shopping-product-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.shopping-product-image {
+    flex: 1 1 300px;
+    text-align: center;
+}
+
+.shopping-product-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.shopping-product-details {
+    flex: 2 1 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.shopping-product-name {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.shopping-product-price {
+    font-size: 1.2em;
+    color: var(--accent-beige);
+    margin: 0;
+}
+
+.shopping-product-description {
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+select#product-option {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: var(--light-beige);
+    width: 100%;
+    max-width: 300px;
+}
+
+.shopping-product-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.shopping-product-actions button {
+    flex: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    transition: background 0.2s ease;
+}
+
+.btn-cart {
+    background-color: #b8986f;
+}
+
+.btn-like {
+    background-color: #e5b1b4;
+}
+
+.btn-buy {
+    background-color: #e6a35c;
+}
+
+.shopping-product-actions button:hover {
+    opacity: 0.9;
+}
+
 
 /* album 추가 */
 .album-categories {
@@ -334,61 +471,6 @@ body {
     object-fit: cover;
 }
 
-/* shopping */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.sort-bar {
-    margin-bottom: 10px;
-}
-
-select {
-    padding: 5px;
-}
-
-.shopping-categories {
-    margin-bottom: 20px;
-}
-
-.shopping-categories button {
-    padding: 10px;
-    margin-right: 10px;
-    background: #857669;
-    border: none;
-    cursor: pointer;
-    justify-content: center;
-}
-
-.shopping-categories button.active {
-    background: #857669;
-    justify-content: center;
-}
-
-.products {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.product {
-    background: #e7dbc8;
-    padding: 10px;
-    width: 150px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.product img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    background: #aaa;
-}
-
-
 /* 지도 */
 
 /* my */
@@ -458,53 +540,4 @@ select {
     content: ">";
     font-weight: bold;
     color: #999;
-}
-
-
-/* join, login 페이지 */
-.form-container {
-    max-width: 500px;
-    margin: 60px auto;
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.form-container h2 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-}
-
-#join-form input,
-#login-form input {
-    width: 87%;
-    padding: 14px;
-    margin: 8px 0;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-#join-form button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 16px;
-    font-size: 1.1rem;
-    background-color: #222;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-#login-form button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 16px;
-    font-size: 1.1rem;
-    background-color: #222;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
 }

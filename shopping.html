@@ -43,7 +43,7 @@
     </div>
 
     <!-- 카테고리 선택 -->
-    <div class="shopping-categories">
+    <div class="categories">
       <button class="active" onclick="filterCategory('all')">전체</button>
       <button onclick="filterCategory('trip')">여행</button>
       <button onclick="filterCategory('daily')">일상</button>
@@ -51,6 +51,15 @@
 
     <!-- 상품 목록 -->
     <div class="products" id="product-list">
+      <a href="shopping_detail.html?id=1">
+        <img src="images/poster_t.png" alt="패브릭 포스터">
+
+      </a>
+      <a href="shopping_detail.html?id=2"></a>
+      <a href="shopping_detail.html?id=3"></a>
+      <a href="shopping_detail.html?id=4"></a>
+      <a href="shopping_detail.html?id=5"></a>
+      <a href="shopping_detail.html?id=6"></a>
       <!-- 자바스크립트로 상품이 삽입됨 -->
     </div>
       <!-- Footer -->
@@ -68,12 +77,12 @@
   <script>
     // 상품 목록
     const products = [
-      { id: 1, name: "패브릭 포스터", price: 18900, category: "trip" },
-      { id: 2, name: "액자", price: 11200, category: "trip" },
-      { id: 3, name: "틴케이스", price: 3500, category: "daily" },
-      { id: 4, name: "마우스 패드", price: 17400, category: "daily" },
-      { id: 5, name: "틴케이스2", price: 3500, category: "trip" },
-      { id: 6, name: "패브릭 포스터2", price: 18900, category: "daily" }
+      { id: 1, name: "패브릭 포스터", price: 18900, category: "trip", image: "poster_t.png" },
+      { id: 2, name: "액자", price: 11200, category: "daily", image: "frame_d.png" },
+      { id: 3, name: "틴케이스", price: 3500, category: "daily", image: "case_d.png" },
+      { id: 4, name: "마우스 패드", price: 17400, category: "trip", image: "pad_t.png" },
+      { id: 5, name: "틴케이스", price: 3500, category: "trip", image: "case_t.png" },
+      { id: 6, name: "패브릭 포스터", price: 18900, category: "daily", image: "poster_d.png" }
     ];
 
     let currentCategory = 'all';
@@ -95,7 +104,7 @@
         const div = document.createElement("div");
         div.className = "product";
         div.innerHTML = `
-          <img src="https://via.placeholder.com/150x100" alt="${p.name}">
+          <img src="images/${p.image}" alt="${p.name}">
           <p>${p.name}</p>
           <p>${p.price.toLocaleString()}원</p>
         `;
@@ -106,7 +115,7 @@
 
     function filterCategory(category) {
       currentCategory = category;
-      document.querySelectorAll('.shopping-categories button').forEach(btn => {
+      document.querySelectorAll('.categories-button').forEach(btn => {
         btn.classList.toggle('active', btn.textContent.includes(category) || (category === 'all' && btn.textContent === '전체'));
       });
       renderProducts();
