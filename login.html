@@ -1,0 +1,70 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jio.film - My Page</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="index.html">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <div class="wrapper">
+            <div class="form-container">
+                <h2>로그인</h2>
+                <form id="login-form">
+                    <input type="email" id="login-email" placeholder="이메일" required><br>
+                    <input type="password" id="login-password" placeholder="비밀번호" required><br>
+                    <button type="submit">로그인</button>
+                </form>
+                <p id="login-message"></p>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("login-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const email = document.getElementById("login-email").value;
+                const password = document.getElementById("login-password").value;
+
+                const users = JSON.parse(localStorage.getItem("users") || "[]");
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (!user) {
+                    alert("이메일 또는 비밀번호가 틀렸습니다.");
+                    return;
+                }
+
+                sessionStorage.setItem("loginUser", JSON.stringify(user));
+                alert(`${user.name}님 환영합니다! (${user.role === "admin" ? "관리자" : "일반 사용자"})`);
+                location.href = "index.html";
+            });
+        </script>
+        <script type="text/javascript" src="common.js"></script>
+</body>
+
+</html>
