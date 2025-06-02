@@ -6,6 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Album 상세 | Jio.film</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+        .album-detail {
+            max-width: 1200px;
+            /* 최대 너비 제한 */
+            margin: 0 auto;
+            /* 중앙 정렬 */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .album-detail {
+                flex-direction: row;
+                justify-content: center;
+                align-items: flex-start;
+            }
+
+            .detail-left {
+                flex: 1;
+                max-width: 500px;
+            }
+
+            .detail-right {
+                flex: 1;
+                padding-left: 30px;
+            }
+        }
+
+
+        .detail-left img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+
+        .related-products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .related-item {
+            display: block;
+            width: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .related-item:hover {
+            transform: scale(1.05);
+        }
+
+        .related-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>

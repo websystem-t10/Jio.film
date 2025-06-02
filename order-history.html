@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 내역 | Jio.film</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .order-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .order-group {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+        }
+
+        .order-date {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .order-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .order-info img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .order-details span {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .order-actions button {
+            display: block;
+            margin: 4px 0;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="index.html">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <main class="order-container" id="order-container"></main>
+
+        <footer class="footer">
+            <div class="footer-info">
+                (주)지오필름 대표 정지은<br>
+                서울특별시 용산구 청파로47길 100<br>
+                지오필름 콘텐츠의 저작권은 저작권자에게 있으며, 이를 무단 사용 및 도용하는 경우 저작권법 등에 따라 법적 책임을 질 수 있음을 알려드립니다.<br>
+                ©2025 Jio.film Corp. All rights reserved.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
+        const currentUser = loginUser?.email;
+        const orderContainer = document.getElementById("order-container");
+
+        const products = [
+            { id: 1, name: "패브릭 포스터", price: 18900, image: "images/poster_t.png" },
+            { id: 2, name: "액자", price: 11200, image: "images/frame_d.png" },
+            { id: 3, name: "틴케이스", price: 3500, image: "images/case_d.png" },
+            { id: 4, name: "마우스 패드", price: 17400, image: "images/pad_t.png" },
+            { id: 5, name: "틴케이스", price: 3500, image: "images/case_t.png" },
+            { id: 6, name: "패브릭 포스터", price: 18900, image: "images/poster_d.png" },
+        ];
+
+        const orderData = JSON.parse(localStorage.getItem("orders") || "{}")[currentUser] || [];
+
+        const groupedOrders = {};
+        orderData.forEach(({ id, date }) => {
+            const key = date.slice(0, 10); // YYYY-MM-DD
+            if (!groupedOrders[key]) groupedOrders[key] = [];
+            groupedOrders[key].push(id);
+        });
+
+        Object.keys(groupedOrders).sort().reverse().forEach(date => {
+            const group = document.createElement("div");
+            group.className = "order-group";
+            group.innerHTML = `<div class="order-date">${date}</div>`;
+
+            groupedOrders[date].forEach(id => {
+                const product = products.find(p => p.id === id);
+                if (!product) return;
+
+                const item = document.createElement("div");
+                item.className = "order-item";
+                item.innerHTML = `
+                    <div class="order-info">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="order-details">
+                            <span><strong>${product.name}</strong></span>
+                            <span>1개</span>
+                            <span>${product.price.toLocaleString()}원</span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button onclick="alert('배송 조회 페이지로 이동')">배송조회</button>
+                        <button onclick="alert('장바구니에 담겼습니다.')">재구매</button>
+                        <button onclick="location.href='photo_review_write.html?id=${product.id}'">포토리뷰 작성</button>
+                    </div>
+                `;
+                group.appendChild(item);
+            });
+
+            orderContainer.appendChild(group);
+        });
+    </script>
+    <script src="common.js"></script>
+</body>
+
+</html>

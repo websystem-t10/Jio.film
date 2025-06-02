@@ -6,6 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jio.film</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Best 상품 */
+        .best-products {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .product {
+            display: block;
+            width: 160px;
+            height: 160px;
+            overflow: hidden;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .product img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 
 <body>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>찜한 상품 | Jio.film</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .like-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .like-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .like-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .like-info img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .like-buttons button {
+            display: block;
+            margin: 5px 0;
+            padding: 6px 12px;
+            background-color: #8e7754;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="index.html">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <div class="like-container">
+            <h2>Like</h2>
+            <div id="like-list"></div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-info">
+                (주)지오필름 대표 정지은<br>
+                서울특별시 용산구 청파로47길 100<br>
+                지오필름 컨테츠의 저작권은 저작권자에게 있으며, 이를 무단 사용 및 도움하는 경우 저작권법 등에 따라 법적 책임을 지역 수 있음을 알려드릴습니다.<br>
+                ©2025 Jio.film Corp. All rights reserved.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
+        const currentUser = loginUser?.email;
+        const likeList = document.getElementById("like-list");
+
+        const allProducts = [
+            { id: 1, name: "패브릭 포스터", image: "images/poster_t.png", price: 18900 },
+            { id: 2, name: "액자", image: "images/frame_d.png", price: 11200 },
+            { id: 3, name: "틴케이스", image: "images/case_d.png", price: 3500 },
+            { id: 4, name: "마우스 패드", image: "images/pad_t.png", price: 17400 },
+            { id: 5, name: "틴케이스", image: "images/case_t.png", price: 3500 },
+            { id: 6, name: "패브릭 포스터", image: "images/poster_d.png", price: 18900 }
+        ];
+
+        function getUserLikes() {
+            const allLikes = JSON.parse(localStorage.getItem("likes") || "{}");
+            return allLikes[currentUser] || [];
+        }
+
+        function renderLikes() {
+            likeList.innerHTML = "";
+            const userLikes = getUserLikes();
+
+            if (!currentUser || userLikes.length === 0) {
+                likeList.innerHTML = "<p>찜한 상품이 없습니다.</p>";
+                return;
+            }
+
+            userLikes.forEach(id => {
+                const product = allProducts.find(p => p.id === id);
+                if (!product) return;
+
+                const div = document.createElement("div");
+                div.className = "like-item";
+                div.innerHTML = `
+        <div class="like-info">
+            <img src="${product.image}" alt="${product.name}">
+            <span>${product.name}</span>
+        </div>
+        <div class="like-buttons">
+            <button onclick="addToCart(${product.id})">장바구니에 넣기</button>
+            <button onclick="removeLike(${product.id})">찜에서 삭제</button>
+        </div>
+      `;
+                likeList.appendChild(div);
+            });
+        }
+
+        function addToCart(id) {
+            const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+            if (!cart[currentUser]) cart[currentUser] = [];
+
+            const exists = cart[currentUser].find(item => item.id === id);
+            if (!exists) {
+                cart[currentUser].push({ id, quantity: 1 });
+                localStorage.setItem("cart", JSON.stringify(cart));
+                alert("장바구니에 추가되었습니다.");
+            } else {
+                alert("이미 장바구니에 있는 상품입니다.");
+            }
+        }
+
+        function removeLike(id) {
+            const likes = JSON.parse(localStorage.getItem("likes") || "{}");
+            if (!likes[currentUser]) return;
+
+            likes[currentUser] = likes[currentUser].filter(pid => pid !== id);
+            localStorage.setItem("likes", JSON.stringify(likes));
+            alert("찜한 상품에서 삭제되었습니다.");
+            renderLikes();
+        }
+
+        renderLikes();
+    </script>
+
+
+
+    <script type="text/javascript" src="common.js"></script>
+</body>
+
+</html>
