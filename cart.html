@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>장바구니 | Jio.film</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .cart-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 20px 10px;
+        }
+
+        .cart-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .cart-info img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .cart-details span {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0 10px;
+        }
+
+        .cart-actions button {
+            padding: 12px 24px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .quantity {
+            width: 50px;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        .cart-list-message {
+            font-size: 16px;
+            text-align: center;
+            margin-top: 40px;
+            color: #555;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="#" onclick="location.reload()">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <div class="cart-container">
+            <div id="cart-list" class="cart-list-message"></div>
+            <div class="cart-actions" id="cart-actions">
+                <button onclick="buySelected()">구매하기</button>
+                <button onclick="deleteSelected()">삭제하기</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-info">
+                (주)지오필름 대표 정지은
+                서울특별시 용산구 청파로47길 100
+                지오필름 콘텐츠의 저작권은 저작권자에게 있으며, 이를 무단 사용 및 도용하는 경우 저작권법 등에 따라 법적 책임을 질 수 있음을 알려드립니다.
+                ©2025 Jio.film Corp. All rights reserved.
+            </div>
+        </footer>
+    </div>
+    <script type="text/javascript" src="common.js"></script>
+
+    <script>
+        const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
+        const currentUser = loginUser?.email;
+        const cartList = document.getElementById("cart-list");
+        const cartActions = document.getElementById("cart-actions");
+
+        const products = [
+            { id: 1, name: "패브릭 포스터", image: "images/poster_t.png", price: 18900 },
+            { id: 2, name: "액자", image: "images/frame_d.png", price: 11200 },
+            { id: 3, name: "틴케이스", image: "images/case_d.png", price: 3500 },
+            { id: 4, name: "마우스 패드", image: "images/pad_t.png", price: 17400 },
+            { id: 5, name: "틴케이스", image: "images/case_t.png", price: 3500 },
+            { id: 6, name: "패브릭 포스터", image: "images/poster_d.png", price: 18900 }
+        ];
+
+        function loadCart() {
+            const carts = JSON.parse(localStorage.getItem("cart") || "{}");
+            const items = carts[currentUser] || [];
+
+            cartList.innerHTML = "";
+
+            if (items.length === 0) {
+                cartList.innerHTML = "<p>장바구니가 비어 있습니다.</p>";
+                cartActions.style.display = "none";
+                return;
+            }
+
+            cartActions.style.display = "flex";
+
+            items.forEach(({ id, quantity = 1 }) => {
+                const product = products.find(p => p.id === id);
+                if (!product) return;
+
+                const div = document.createElement("div");
+                div.className = "cart-item";
+                div.innerHTML = `
+        <input type="checkbox" class="item-check" data-id="${id}">
+        <div class="cart-info">
+          <img src="${product.image}" alt="${product.name}">
+          <div class="cart-details">
+            <span><strong>${product.name}</strong></span>
+            <span>${product.price.toLocaleString()}원</span>
+          </div>
+        </div>
+        <input type="number" class="quantity" value="${quantity}" min="1">
+      `;
+                cartList.appendChild(div);
+            });
+        }
+
+        function getSelectedItems() {
+            const checkboxes = document.querySelectorAll(".item-check:checked");
+            return Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
+        }
+
+        function deleteSelected() {
+            const selectedIds = getSelectedItems();
+            if (selectedIds.length === 0) return alert("삭제할 상품을 선택하세요.");
+
+            const carts = JSON.parse(localStorage.getItem("cart") || "{}");
+            carts[currentUser] = (carts[currentUser] || []).filter(item => !selectedIds.includes(item.id || item));
+            localStorage.setItem("cart", JSON.stringify(carts));
+            alert("선택한 상품이 삭제되었습니다.");
+            loadCart();
+        }
+
+        function buySelected() {
+            const selectedIds = getSelectedItems();
+            if (selectedIds.length === 0) return alert("구매할 상품을 선택하세요.");
+
+            if (!confirm("선택한 상품을 구매하시겠습니까?")) return;
+
+            const orders = JSON.parse(localStorage.getItem("orders") || "{}");
+            const carts = JSON.parse(localStorage.getItem("cart") || "{}");
+
+            const userOrders = orders[currentUser] || [];
+            const cartItems = carts[currentUser] || [];
+
+            // 구매된 상품 추가
+            selectedIds.forEach(id => {
+                userOrders.push({ id, date: new Date().toISOString() });
+            });
+
+            // 장바구니에서 구매된 상품 삭제
+            carts[currentUser] = cartItems.filter(item => !selectedIds.includes(item.id || item));
+
+            localStorage.setItem("orders", JSON.stringify({ ...orders, [currentUser]: userOrders }));
+            localStorage.setItem("cart", JSON.stringify(carts));
+
+            alert("구매가 완료되었습니다.");
+            loadCart();
+        }
+
+
+        loadCart();
+    </script>
+
+</body>
+
+</html>
