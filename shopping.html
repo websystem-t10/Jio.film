@@ -7,6 +7,72 @@
   <title>Shopping | Jio.film</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    /* 미디어쿼리: 화면 작아질 때 정렬방식-카테고리 위치 변경 */
+    @media (max-width: 670px) {
+      .upside-banner {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .sort-bar {
+        position: static;
+        transform: none;
+        margin-bottom: 40px;
+        height: 30px;
+        width: auto;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .album-categories {
+        justify-content: center;
+      }
+    }
+
+    /* 카테고리 */
+    .album-categories {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .category-button {
+      padding: 10px 20px;
+      border: 1px solid var(--dark-brown);
+      background-color: white;
+      color: var(--dark-brown);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .category-button:hover {
+      background-color: var(--accent-beige);
+      color: white;
+    }
+
+    .upside-banner {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 20px 0;
+      background-color: #f4f1e6;
+    }
+
+    /* 정렬방식 */
+    .sort-bar {
+      position: flex;
+      text-align: left;
+      transform: translateY(-50%);
+      height: 0;
+      width: 100%;
+      padding-left: 20px;
+      overflow: visible;
+    }
+
     .album-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -67,23 +133,26 @@
       </ul>
     </aside>
     <div id="overlay" class="overlay hidden"></div>
+    <div class="upside-banner">
 
-    <!-- 정렬 방식 -->
-    <div class="sort-bar" style="text-align:center; margin: 20px;">
-      <label for="sort">정렬 방식:</label>
-      <select id="sort" onchange="sortProducts()">
-        <option value="default">기본</option>
-        <option value="asc">가격 낮은 순</option>
-        <option value="desc">가격 높은 순</option>
-      </select>
+      <!-- 정렬 방식 -->
+      <div class="sort-bar" style="float: left;" margin: 20px;>
+        <label for="sort">정렬 방식:</label>
+        <select id="sort" onchange="sortProducts()">
+          <option value="default">기본</option>
+          <option value="asc">가격 낮은 순</option>
+          <option value="desc">가격 높은 순</option>
+        </select>
+      </div>
+
+      <!-- 카테고리 필터 -->
+      <section class="album-categories">
+        <button class="category-button" onclick="filterCategory('all')">전체</button>
+        <button class="category-button" onclick="filterCategory('trip')">여행</button>
+        <button class="category-button" onclick="filterCategory('daily')">일상</button>
+      </section>
+
     </div>
-
-    <!-- 카테고리 필터 -->
-    <section class="album-categories">
-      <button class="category-button" onclick="filterCategory('all')">전체</button>
-      <button class="category-button" onclick="filterCategory('trip')">여행</button>
-      <button class="category-button" onclick="filterCategory('daily')">일상</button>
-    </section>
 
     <!-- 상품 목록 -->
     <main class="album-gallery" id="product-list">
