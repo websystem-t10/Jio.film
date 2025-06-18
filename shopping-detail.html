@@ -32,7 +32,7 @@
         }
 
         .product-price {
-            color: #a67c52;
+            color: #7a6b5a;
             font-weight: bold;
             font-size: 1.4rem;
         }
@@ -52,17 +52,17 @@
         }
 
         .btn-cart {
-            background-color: #444;
+            background-color: #a1896d;
             color: white;
         }
 
         .btn-like {
-            background-color: #c69c6d;
+            background-color: #8f4838;
             color: white;
         }
 
         .btn-buy {
-            background-color: #222;
+            background-color: #3b2d1d;
             color: white;
         }
     </style>
@@ -103,7 +103,7 @@
                 <p class="product-description"></p>
 
                 <div class="product-actions">
-                    <button class="btn-cart">장바구니에 넣기</button>
+                    <button class="btn-cart">장바구니에 담기</button>
                     <button class="btn-like">찜하기</button>
                     <button class="btn-buy">구매하기</button>
                 </div>
@@ -159,7 +159,7 @@
                 localStorage.setItem("cart", JSON.stringify(cart));
                 alert("장바구니에 추가되었습니다.");
             } else {
-                alert("이미 장바구니에 있는 상품입니다.");
+                alert("이미 장바구니에 담긴 상품입니다.");
             }
         });
 
@@ -193,7 +193,7 @@
                 userLikes.push(product.id);
                 likes[user.email] = userLikes;
                 localStorage.setItem("likes", JSON.stringify(likes));
-                alert("찜 목록에 추가되었습니다.");
+                alert("찜한 상품에 추가되었습니다.");
             } else {
                 alert("이미 찜한 상품입니다.");
             }
