@@ -56,6 +56,16 @@
         </footer>
     </div>
     <script>
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        users.push({
+            name: "관리자",
+            email: "admin@jio.com",
+            password: "1234",
+            role: "admin"
+        });
+        localStorage.setItem("users", JSON.stringify(users));
+
+
         document.getElementById("login-form").addEventListener("submit", function (e) {
             e.preventDefault();
             const email = document.getElementById("login-email").value;
