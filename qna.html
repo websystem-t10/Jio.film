@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q&A | Jio.film</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Header 재사용 -->
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="index.html">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <!-- Main -->
+        <main class="qna-main">
+            <section id="qna-list-view" style="display: block;">
+                <div class="qna-header">
+                    <h1>Q&A</h1>
+                    <button class="qna-write-btn">글쓰기</button>
+                </div>
+                <table class="qna-table">
+                    <thead>
+                        <tr>
+                            <th>게시글 제목</th>
+                            <th>작성자</th>
+                            <th>작성 일자</th>
+                            <th>답변 상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    </table>
+            </section>
+
+            <!-- 질문글 작성 -->
+            <section id="qna-write-view" class="qna-container" style="display: none;">
+                <div class="qna-write-header">
+                    <input type="text" id="qna-title" placeholder="제목을 입력하세요" />
+                    <div class="visibility-toggle">
+                    <button id="btn-public" class="active">공개</button>
+                    <button id="btn-private">비공개</button>
+                    </div>
+                </div>
+                <textarea id="qna-content" placeholder="질문 내용을 입력하세요..."></textarea>
+                <div class="qna-write-footer">
+                    <button id="btn-submit">완료</button>
+                    <button id="btn-delete">삭제</button>
+                </div>
+            </section>
+
+            <!-- 질문글 보기 -->
+            <section id="qna-read-view" class="qna-container" style="display: none;">
+                <div id="qna-read-title" class="qna-read-title"></div>
+                <div id="qna-read-content" class="qna-read-content"></div>
+                <div id="qna-private-message" class="qna-private-warning" style="display: none;">비공개 글입니다.</div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-info">
+                (주)지오필름 대표 정지은<br>
+                서울특별시 용산구 청파로47길 100<br>
+                지오필름 콘텐츠의 저작권은 저작권자에게 있으며, 이를 무단 사용 및 도용하는 경우 저작권법 등에 따라 법적 책임을 질 수 있음을 알려드립니다.<br>
+                ©2025 Jio.film Corp. All rights reserved.<br>
+            </div>
+        </footer>
+    </div>
+    </div>
+
+<script>
+// 로그인한 사용자 정보 가져오기
+const loginUser = JSON.parse(sessionStorage.getItem("loginUser") || "null");
+const sessionUser = loginUser?.name || null;
+const isAdmin = loginUser?.role === "admin";
+
+// Q&A 데이터 불러오기 또는 초기화
+let qnaData = JSON.parse(localStorage.getItem("qnaData") || "[]");
+
+
+function showView(viewId) {
+    document.querySelectorAll("main > section").forEach(sec => sec.style.display = "none");
+    document.getElementById(viewId).style.display = "block";
+}
+
+// 글쓰기 버튼
+const writeBtn = document.querySelector(".qna-write-btn");
+document.querySelector(".qna-write-btn").addEventListener("click", () => {
+    // 로그인 상태 체크
+    if (!sessionUser) {
+        // 로그인 안 된 경우 로그인 페이지로 이동
+        window.location.href = "login.html";
+        return;
+    }
+    document.getElementById("qna-title").value = "";
+    document.getElementById("qna-content").value = "";
+    document.getElementById("btn-public").classList.add("active");
+    document.getElementById("btn-private").classList.remove("active");
+    showView("qna-write-view");
+});
+
+// 공개/비공개 토글
+let isPrivate = false;
+function toggleVisibilityButtons() {
+    document.getElementById("btn-public").classList.toggle("active", !isPrivate);
+    document.getElementById("btn-private").classList.toggle("active", isPrivate);
+}
+document.getElementById("btn-public").onclick = () => { isPrivate = false; toggleVisibilityButtons(); };
+document.getElementById("btn-private").onclick = () => { isPrivate = true; toggleVisibilityButtons(); };
+
+// 게시글 등록
+const submitBtn = document.getElementById("btn-submit");
+submitBtn?.addEventListener("click", () => {
+    const title = document.getElementById("qna-title").value.trim();
+    const content = document.getElementById("qna-content").value.trim();
+    if (!title || !content) return alert("제목과 내용을 입력해주세요.");
+    qnaData.unshift({
+        id: Date.now(),
+        title, content,
+        writer: sessionUser,
+        isPrivate,
+        date: new Date().toISOString().split("T")[0],
+        answer: null
+    });
+    localStorage.setItem("qnaData", JSON.stringify(qnaData));
+    renderList();
+    showView("qna-list-view");
+});
+
+// 목록 렌더링
+function renderList() {
+    const tbody = document.querySelector("#qna-list-view tbody");
+    tbody.innerHTML = "";
+    qnaData.forEach(post => {
+        const tr = document.createElement("tr");
+
+        // 제목 셀
+        const tdTitle = document.createElement("td");
+        const a = document.createElement("a");
+        a.href = "#";
+        a.textContent = post.isPrivate ? `🔒 ${post.title}` : post.title;
+        a.addEventListener("click", e => {
+            e.preventDefault();
+            if (!sessionUser) {
+                location.href = "login.html";
+                return;
+            }
+
+            if (isAdmin) {
+                openAdminReply(post);
+            } else if (post.writer === sessionUser) {
+                openModifyPost(post); // 사용자 본인 글 수정
+            } else if (post.isPrivate) {
+                alert("비공개 글입니다."); // 작성자도 관리자도 아니면 차단
+            } else {
+                openPost(post); // 공개글 읽기
+            }
+        });
+        tdTitle.appendChild(a);
+        tr.appendChild(tdTitle);
+
+        // 작성자
+        const tdWriter = document.createElement("td");
+        tdWriter.textContent = post.writer;
+        tr.appendChild(tdWriter);
+
+        // 날짜
+        const tdDate = document.createElement("td");
+        tdDate.textContent = post.date;
+        tr.appendChild(tdDate);
+
+        // 상태
+        const tdStatus = document.createElement("td");
+        tdStatus.className = "status " + (post.answer ? "answered" : "waiting");
+        tdStatus.textContent = post.answer ? "답변 완료" : "미답변";
+        tr.appendChild(tdStatus);
+
+        tbody.appendChild(tr);
+
+        // 답변 미리보기 행
+        if (post.answer) {
+            const reply = document.createElement("tr");
+            const replyTd = document.createElement("td");
+            replyTd.colSpan = 4;
+            replyTd.style.color = "gray";
+            replyTd.style.paddingLeft = "30px";
+            replyTd.textContent = `↳ Re: ${post.answer.length > 50 ? post.answer.slice(0, 50) + "…" : post.answer}`;
+            reply.appendChild(replyTd);
+            tbody.appendChild(reply);
+        }
+    });
+}
+
+// 사용자 게시글 수정
+function openModifyPost(post) {
+    // 기존 글쓰기 뷰를 수정 모드로 사용
+    document.getElementById("qna-title").value = post.title;
+    document.getElementById("qna-content").value = post.content;
+    isPrivate = post.isPrivate;
+    toggleVisibilityButtons();
+
+    showView("qna-write-view");
+
+    // 기존 완료 버튼에 기존 리스너 제거 후 새 리스너 바인딩
+    const submitBtn = document.getElementById("btn-submit");
+    const newBtn = submitBtn.cloneNode(true); // 버튼 새로 복제
+    submitBtn.parentNode.replaceChild(newBtn, submitBtn); // 기존 이벤트 제거
+
+    newBtn.addEventListener("click", () => {
+        const title = document.getElementById("qna-title").value.trim();
+        const content = document.getElementById("qna-content").value.trim();
+        if (!title || !content) return alert("제목과 내용을 입력해주세요.");
+        post.title = title;
+        post.content = content;
+        post.isPrivate = isPrivate;
+        localStorage.setItem("qnaData", JSON.stringify(qnaData));
+        renderList();
+        showView("qna-list-view");
+    });
+
+    // 삭제 버튼 이벤트 바인딩
+    const deleteBtn = document.getElementById("btn-delete");
+    const newDeleteBtn = deleteBtn.cloneNode(true);
+    deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+
+    newDeleteBtn.addEventListener("click", () => {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+        qnaData = qnaData.filter(item => item.id !== post.id);
+        localStorage.setItem("qnaData", JSON.stringify(qnaData));
+        renderList();
+        showView("qna-list-view");
+    });
+}
+
+// 게시글 읽기
+function openPost(post) {
+    document.getElementById("qna-private-message").style.display = "none";
+    document.getElementById("qna-read-title").textContent = `제목: ${post.title}`;
+    document.getElementById("qna-read-content").innerHTML = `
+        <p><strong>작성자:</strong> ${post.writer}</p>
+        <p><strong>내용:</strong><br>${post.content.replace(/\n/g, "<br>")}</p>
+    `;
+    showView("qna-read-view");
+}
+
+// 관리자 답변 입력 뷰
+function openAdminReply(post) {
+    let adminSection = document.getElementById("qna-admin-reply-view");
+    if (!adminSection) {
+        adminSection = document.createElement("section");
+        adminSection.id = "qna-admin-reply-view";
+        adminSection.innerHTML = `
+            <h2 id="admin-reply-title"></h2>
+            <p id="admin-reply-content"></p>
+            <textarea id="admin-reply-text" placeholder="답변을 입력하세요"></textarea>
+            <button id="btn-admin-reply-submit">답변 등록</button>
+        `;
+        document.querySelector("main").appendChild(adminSection);
+    }
+    document.getElementById("admin-reply-title").textContent = post.title;
+    document.getElementById("admin-reply-content").textContent = post.content;
+    document.getElementById("admin-reply-text").value = post.answer || "";
+    document.getElementById("btn-admin-reply-submit").onclick = () => {
+        const answer = document.getElementById("admin-reply-text").value.trim();
+        if (!answer) return alert("답변을 입력하세요.");
+        post.answer = answer;
+        localStorage.setItem("qnaData", JSON.stringify(qnaData)); // 이 줄 추가
+        renderList();
+        showView("qna-list-view");
+    };
+    showView("qna-admin-reply-view");
+}
+renderList();
+showView("qna-list-view");
+</script>
+<script type="text/javascript" src="common.js"></script>
+</body>
+</html>
