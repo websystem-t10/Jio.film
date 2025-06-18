@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css" />
     <style>
         .like-container {
+            width: 50%;
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
@@ -88,6 +89,12 @@
     <script>
         const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
         const currentUser = loginUser?.email;
+        // 로그인되지 않은 경우
+        if (!currentUser) {
+            alert("로그인이 필요합니다.");
+            location.href = "login.html";
+        }
+
         const likeList = document.getElementById("like-list");
 
         const allProducts = [
@@ -107,11 +114,15 @@
         function renderLikes() {
             likeList.innerHTML = "";
             const userLikes = getUserLikes();
+            const title = document.querySelector(".like-container h2");
 
             if (!currentUser || userLikes.length === 0) {
+                if (title) title.style.display = "none";  // 제목 숨기기
                 likeList.innerHTML = "<p>찜한 상품이 없습니다.</p>";
                 return;
             }
+
+            if (title) title.style.display = "block"; // 찜한 상품 있을 때 다시 보이게
 
             userLikes.forEach(id => {
                 const product = allProducts.find(p => p.id === id);
@@ -120,18 +131,19 @@
                 const div = document.createElement("div");
                 div.className = "like-item";
                 div.innerHTML = `
-        <div class="like-info">
-            <img src="${product.image}" alt="${product.name}">
-            <span>${product.name}</span>
-        </div>
-        <div class="like-buttons">
-            <button onclick="addToCart(${product.id})">장바구니에 넣기</button>
-            <button onclick="removeLike(${product.id})">찜에서 삭제</button>
-        </div>
-      `;
+            <div class="like-info">
+                <img src="${product.image}" alt="${product.name}">
+                <span>${product.name}</span>
+            </div>
+            <div class="like-buttons">
+                <button onclick="addToCart(${product.id})">장바구니에 넣기</button>
+                <button onclick="removeLike(${product.id})">찜에서 삭제</button>
+            </div>
+        `;
                 likeList.appendChild(div);
             });
         }
+
 
         function addToCart(id) {
             const cart = JSON.parse(localStorage.getItem("cart") || "{}");
