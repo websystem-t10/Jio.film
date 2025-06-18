@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css" />
     <style>
         .cart-container {
+            width: 50%;
             max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
@@ -121,6 +122,11 @@
     <script>
         const loginUser = JSON.parse(sessionStorage.getItem("loginUser"));
         const currentUser = loginUser?.email;
+        // 로그인되지 않은 경우
+        if (!currentUser) {
+            alert("로그인이 필요합니다.");
+            location.href = "login.html";
+        }
         const cartList = document.getElementById("cart-list");
         const cartActions = document.getElementById("cart-actions");
 
