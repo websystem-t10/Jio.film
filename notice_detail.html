@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지 상세 | Jio.film</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .notice-detail {
+            height: auto;
+            width: 90%;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .notice-detail h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .notice-detail p {
+            margin: 10px 0;
+
+        }
+
+        .admin-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 50px;
+        }
+
+        .admin-actions button {
+            padding: 8px 14px;
+            border: none;
+            background-color: #444;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .back-button {
+            background-color: #888;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <header class="header">
+            <button id="menuToggle" class="menu-button">☰</button>
+            <h1 class="logo"><a href="#" onclick="location.reload()">Jio.film</a></h1>
+            <nav class="nav"></nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar hidden">
+            <button id="closeSidebar" class="close-btn">✕</button>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="album.html">Album</a></li>
+                <li><a href="shopping.html">Shopping</a></li>
+                <li><a href="qna.html">Q&A</a></li>
+                <li><a href="photo_review.html">Photo Review</a></li>
+                <li><a href="notice.html">Notice</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="map.html">오시는 길</a></li>
+            </ul>
+        </aside>
+        <div id="overlay" class="overlay hidden"></div>
+
+        <div class="notice-detail">
+            <h2 id="notice-title">제목</h2>
+            <p><strong>작성일:</strong> <span id="notice-date"></span></p>
+            <hr>
+            <p id="notice-content">내용</p>
+
+            <!-- 관리자 + 뒤로가기 공통 영역 -->
+            <div class="admin-actions" id="admin-buttons" style="display: none;">
+                <button class="back-button" onclick="history.back()">← 목록으로</button>
+                <button onclick="editNotice()">수정</button>
+                <button onclick="deleteNotice()">삭제</button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-info">
+                (주)지오필름 대표 정지은<br>
+                서울특별시 용산구 청파로47길 100<br>
+                지오필름 콘텐츠의 저작권은 저작권자에게 있으며, 이를 무단 사용 및 도용하는 경우 저작권법 등에 따라 법적 책임을 질 수 있음을 알려드립니다.<br>
+                ©2025 Jio.film Corp. All rights reserved.
+            </div>
+        </footer>
+    </div>
+    <script>
+        const params = new URLSearchParams(location.search);
+        const id = Number(params.get("id"));
+        const notices = JSON.parse(localStorage.getItem("notices") || "[]");
+        const notice = notices.find(n => n.id === id);
+
+        if (!notice) {
+            alert("공지글을 찾을 수 없습니다.");
+            location.href = "notice.html";
+        }
+
+        document.getElementById("notice-title").textContent = notice.title;
+        document.getElementById("notice-date").textContent = notice.date;
+        document.getElementById("notice-content").textContent = notice.content;
+
+        const user = JSON.parse(sessionStorage.getItem("loginUser"));
+        if (user?.role === "admin") {
+            document.getElementById("admin-buttons").style.display = "flex";
+        }
+    </script>
+    <script src="common.js"></script>
+</body>
+
+</html>
