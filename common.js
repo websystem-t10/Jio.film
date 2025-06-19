@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
       <a href="my.html">My</a>
       <a href="cart.html">Cart</a>
       <a href="like.html">Like</a>
-      <a href="#" id="logoutBtn">Logout</a>
+      <a href="index.html" id="logoutBtn">Logout</a>
     `;
 
         document.getElementById('logoutBtn').addEventListener('click', (e) => {
