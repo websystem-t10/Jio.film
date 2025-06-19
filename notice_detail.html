@@ -116,7 +116,21 @@
         if (user?.role === "admin") {
             document.getElementById("admin-buttons").style.display = "flex";
         }
+
+        function editNotice() {
+            location.href = `notice_edit.html?id=${id}`;
+        }
+
+        function deleteNotice() {
+            if (!confirm("정말 삭제하시겠습니까?")) return;
+
+            const updated = notices.filter(n => n.id !== id);
+            localStorage.setItem("notices", JSON.stringify(updated));
+            alert("공지글이 삭제되었습니다.");
+            location.href = "notice.html";
+        }
     </script>
+
     <script src="common.js"></script>
 </body>
 
