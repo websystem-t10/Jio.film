@@ -82,7 +82,7 @@
 
             <!-- 관리자 + 뒤로가기 공통 영역 -->
             <div class="admin-actions" id="admin-buttons" style="display: none;">
-                <button class="back-button" onclick="history.back()">← 목록으로</button>
+                <button class="back-button" onclick="backButton()">← 목록으로</button>
                 <button onclick="editNotice()">수정</button>
                 <button onclick="deleteNotice()">삭제</button>
             </div>
@@ -127,6 +127,9 @@
             const updated = notices.filter(n => n.id !== id);
             localStorage.setItem("notices", JSON.stringify(updated));
             alert("공지글이 삭제되었습니다.");
+            location.href = "notice.html";
+        }
+        function backButton() {
             location.href = "notice.html";
         }
     </script>
